@@ -15,7 +15,7 @@ app.use(
 app.use(bodyParser.json());
 app.use("/api/template", testRoutes);
 
-const PORT = parseInt(process.env.PORT || "8000", 10);
+const PORT = parseInt(process.env.PORT || "1337", 10);
 
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`test service listening on port ${PORT}`);
