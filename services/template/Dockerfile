@@ -1,22 +1,17 @@
-#syntax=docker/dockerfile:1
+# syntax=docker/dockerfile:1.4
+FROM node:22-bullseye
 
-FROM node:18-bullseye
-
-# Set environment variable
 ENV NODE_ENV=development
-
-# Set working directory
 WORKDIR /usr/src/app
 
-# Install dependencies using cache and bind mount (requires BuildKit)
-RUN --mount=type=bind,source=package.json,target=package.json \
-  --mount=type=bind,source=package-lock.json,target=package-lock.json \
-  --mount=type=cache,target=/root/.npm \
-  npm ci --include=dev
+# Install dependencies
+COPY package.json package-lock.json ./
+RUN npm ci --include=dev
 
+# Copy source code
 COPY . .
 
-# Compile TypeScript to JavaScript (creates dist/)
+# Compile TypeScript
 RUN npm run build
 
 # Expose port used by the app
