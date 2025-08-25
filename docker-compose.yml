@@ -1,6 +1,93 @@
 services:
+
   template:
     build: ./services/template
     env_file: .env
     ports:
       - "1337:1337"
+  auth-db:
+    image: postgres:15
+    container_name: auth-db
+    restart: always
+    environment:
+      POSTGRES_DB: ${AUTH_POSTGRES_DB}
+      POSTGRES_USER: ${AUTH_POSTGRES_USER}
+      POSTGRES_PASSWORD: ${AUTH_POSTGRES_PASSWORD}
+    networks: [app-network]
+    ports:
+      - "5433:5432" # external:internal
+    volumes:
+      - auth_data:/var/lib/postgresql/data
+
+  post-db:
+    image: mongo:6
+    container_name: post-db
+    restart: always
+    volumes:
+      - mongodata:/data/db
+    networks: [app-network]
+    ports:
+      - "27017:27017"
+
+
+  # ----------------------------------------------------------------
+  # Tools
+  # ----------------------------------------------------------------
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: my-pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: adminpassword
+    ports:
+      - "8080:80" # Map host port 8080 to container port 80
+    depends_on: [auth-db, profile-db]
+    networks: [app-network]
+    volumes:
+      - ./pgadmin/servers.json:/pgadmin4/servers.json:ro  # pre-load servers
+      - pgadmin_data:/var/lib/pgadmin
+
+
+  # ----------------------------------------------------------------
+  # Services
+  # ----------------------------------------------------------------
+  auth:
+    build: ./services/auth
+    env_file: .env
+    environment:
+      JWT_SECRET: ${JWT_SECRET}
+      DATABASE_URL: ${AUTH_DATABASE_URL}
+    depends_on: [auth-db]
+    networks: [app-network]
+    ports:
+      - "4003:4003"
+
+  post:
+    build: ./services/post
+    env_file: .env
+    depends_on: [post-db]
+    networks: [app-network]
+    ports:
+      - "4001:4001"
+
+  graphql-gateway:
+    build: ./graphql-gateway
+    depends_on: [profile, post]
+    networks: [app-network]
+    environment:
+      POST_SERVICE_URL: ${POST_SERVICE_URL}
+      PROFILE_SERVICE_URL: ${PROFILE_SERVICE_URL}
+      SEARCH_SERVICE_URL: ${SEARCH_SERVICE_URL}
+    ports:
+      - "4000:4000"
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  auth_data:
+  mongodata:
+  pgadmin_data:
+
