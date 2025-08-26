@@ -1,0 +1,25 @@
+{
+  "name": "posts-service",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node dist/index.js",
+    "build": "tsc",
+    "seed": "npx tsx src/models/seed.ts",
+    "dev": "npx tsx src/index.ts"
+  },
+  "dependencies": {
+    "@apollo/server": "^5.0.0",
+    "@apollo/subgraph": "^2.11.2",
+    "graphql": "^16.8.0",
+    "graphql-tag": "^2.12.6",
+    "mongoose": "^7.4.0"
+  },
+  "devDependencies": {
+    "@tsconfig/node22": "^22.0.2",
+    "@types/node": "^24.2.1",
+    "tsx": "^4.20.5",
+    "typescript": "^5.9.2"
+  }
+}

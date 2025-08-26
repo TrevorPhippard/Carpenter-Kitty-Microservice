@@ -1,10 +1,7 @@
 services:
-
-  template:
-    build: ./services/template
-    env_file: .env
-    ports:
-      - "1337:1337"
+  # ----------------------------------------------------------------
+  # DATABASES
+  # ----------------------------------------------------------------
   auth-db:
     image: postgres:15
     container_name: auth-db
@@ -13,11 +10,12 @@ services:
       POSTGRES_DB: ${AUTH_DB_NAME}
       POSTGRES_USER: ${AUTH_DB_USER}
       POSTGRES_PASSWORD: ${AUTH_DB_PASSWORD}
-    networks: [app-network]
     ports:
       - "5433:5432" # external:internal
     volumes:
       - auth_data:/var/lib/postgresql/data
+    networks:
+      - app-network
 
   post-db:
     image: mongo:6
@@ -25,10 +23,10 @@ services:
     restart: always
     volumes:
       - mongodata:/data/db
-    networks: [app-network]
     ports:
       - "27017:27017"
-
+    networks:
+      - app-network
 
   # ----------------------------------------------------------------
   # Tools
@@ -43,11 +41,11 @@ services:
     ports:
       - "8080:80" # Map host port 8080 to container port 80
     depends_on: [auth-db]
-    networks: [app-network]
     volumes:
       - ./pgadmin/servers.json:/pgadmin4/servers.json:ro  # pre-load servers
       - pgadmin_data:/var/lib/pgadmin
-
+    networks:
+      - app-network
 
   # ----------------------------------------------------------------
   # Services
@@ -59,28 +57,30 @@ services:
       JWT_SECRET: ${JWT_SECRET}
       DATABASE_URL: ${AUTH_DATABASE_URL}
     depends_on: [auth-db]
-    networks: [app-network]
-    ports:
-      - "4003:4003"
-
-  post:
-    build: ./services/posts
-    env_file: .env
-    environment:
-      MONGO_URL: ${POST_SERVICE_URL}
-    depends_on: [post-db]
-    networks: [app-network]
     ports:
       - "4001:4001"
+    networks:
+      - app-network
+
+  post:
+    build: ./services/post
+    env_file: .env
+    environment:
+      POSTS_DATABASE_URL: ${POST_SERVICE_URL}
+    depends_on: [post-db]
+    ports:
+      - "4003:4003"
+    networks:
+      - app-network
 
   gateway:
     build: ./gateway
     depends_on:
-      - auth
       - post
-    networks: [app-network]
     ports:
       - "4000:4000"
+    networks:
+      - app-network
 
 networks:
   app-network:
@@ -90,4 +90,3 @@ volumes:
   auth_data:
   mongodata:
   pgadmin_data:
-
