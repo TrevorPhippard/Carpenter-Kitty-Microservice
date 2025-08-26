@@ -72,11 +72,16 @@ services:
       - "4003:4003"
     networks:
       - app-network
-
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4003"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
   gateway:
     build: ./gateway
     depends_on:
-      - post
+      post:
+        condition: service_healthy
     ports:
       - "4000:4000"
     networks:

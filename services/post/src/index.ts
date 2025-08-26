@@ -14,20 +14,30 @@ const MONGO_URL =
 mongoose.connect(MONGO_URL).then(() => console.log("Connected to MongoDB"));
 
 const typeDefs = gql`
+  input CommentInput {
+    author: String!
+    content: String!
+  }
+
   type Comment {
-    content: String
-    author: String
+    id: ID!
+    author: String!
+    content: String!
   }
 
   type Post @key(fields: "id") {
     id: ID!
-    content: String!
     author: String!
-    comments: [Comment]
+    content: String!
+    comments: [Comment!]!
   }
 
   type Query {
     posts: [Post]
+  }
+
+  type Mutation {
+    addPost(author: String!, content: String!, comments: [CommentInput!]): Post!
   }
 `;
 
@@ -37,7 +47,7 @@ interface Comment {
 }
 
 interface PostModel {
-  id: string;
+  id?: string;
   content: string;
   author: string;
   comments: Comment[];
@@ -47,8 +57,22 @@ const resolvers = {
   Query: {
     posts: async () => await PostModel.find(),
   },
+
+  Mutation: {
+    addPost: async (_: any, { author, content, comments }: PostModel) => {
+      const post = new PostModel({
+        author,
+        content,
+        comments: comments ?? [],
+      });
+
+      await post.save();
+      return post;
+    },
+  },
+
   Post: {
-    __resolveReference(post: Pick<PostModel, "id">): PostModel {
+    __resolveReference(post: PostModel) {
       return { id: post.id, content: "opinion", author: "test", comments: [] };
     },
   },

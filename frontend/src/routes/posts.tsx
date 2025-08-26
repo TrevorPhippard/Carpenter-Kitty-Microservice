@@ -1,58 +1,78 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { usePosts } from "../hooks/usePosts";
+import { type AddPostInput, type Post, type Comment } from "../types/api";
 
 export const Route = createFileRoute("/posts")({
   component: Posts,
 });
 
-interface Post {
-  id: string;
-  title: string;
-  completed: boolean;
-}
-
 function Posts() {
-  const { data: posts, isLoading, addPost, togglePost } = usePosts();
-  const [newTitle, setNewTitle] = useState("");
+  const { data: posts, isLoading, addPost } = usePosts();
+
+  // Separate inputs for author and content
+  const [author, setAuthor] = useState("");
+  const [content, setContent] = useState("");
 
   if (isLoading) return <div>Loading...</div>;
 
+  const handleAddPost = () => {
+    if (!author.trim() || !content.trim()) return;
+
+    const newPost: AddPostInput = {
+      author: author.trim(),
+      content: content.trim(),
+      // Optionally, you can handle comments here if you want
+      // comments: [],
+    };
+
+    addPost.mutate(newPost);
+    setAuthor("");
+    setContent("");
+  };
+
   return (
     <div className="p-4 max-w-md mx-auto">
-      <h2 className="text-2xl font-bold mb-4">posts</h2>
+      <h2 className="text-2xl font-bold mb-4">Posts</h2>
 
-      <div className="flex gap-2 mb-4">
+      <div className="flex flex-col gap-2 mb-4">
         <input
           type="text"
-          className="border p-2 flex-1 rounded"
-          value={newTitle}
-          onChange={(e) => setNewTitle(e.target.value)}
+          placeholder="Author"
+          className="border p-2 rounded"
+          value={author}
+          onChange={(e) => setAuthor(e.target.value)}
+        />
+        <textarea
+          placeholder="Content"
+          className="border p-2 rounded resize-none"
+          rows={3}
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
         />
         <button
-          className="bg-blue-500 text-white px-4 rounded"
-          onClick={() => {
-            if (!newTitle) return;
-            addPost.mutate(newTitle);
-            setNewTitle("");
-          }}
+          className="bg-blue-500 text-white px-4 py-2 rounded self-start"
+          onClick={handleAddPost}
         >
-          Add
+          Add Post
         </button>
       </div>
 
       <ul className="space-y-2">
-        {posts?.map((Post: Post) => (
-          <li
-            key={Post.id}
-            className="flex items-center justify-between p-2 border rounded"
-          >
-            <span
-              className={`cursor-pointer ${Post.completed ? "line-through text-gray-500" : ""}`}
-              onClick={() => togglePost.mutate(Post.id)}
-            >
-              {Post.title}
-            </span>
+        {posts?.map((postEntry: Post) => (
+          <li key={postEntry.id} className="p-2 border rounded">
+            <div>
+              <strong>{postEntry.author}</strong>: {postEntry.content}
+            </div>
+            {(postEntry.comments ?? []).length > 0 && (
+              <ul className="ml-4 mt-2 space-y-1 text-sm text-gray-600">
+                {(postEntry.comments ?? []).map((comment) => (
+                  <li key={comment.id}>
+                    <em>{comment.author}</em>: {comment.content}
+                  </li>
+                ))}
+              </ul>
+            )}
           </li>
         ))}
       </ul>

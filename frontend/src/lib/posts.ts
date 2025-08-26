@@ -4,27 +4,31 @@ export const GET_POSTS = gql`
   query GetPosts {
     posts {
       id
-      title
-      completed
+      author
+      comments {
+        author
+        content
+      }
+      content
     }
   }
 `;
 
 export const ADD_POST = gql`
-  mutation AddPost($title: String!) {
-    addPost(title: $title) {
+  mutation AddPost(
+    $author: String!
+    $content: String!
+    $comments: [CommentInput!]
+  ) {
+    addPost(author: $author, content: $content, comments: $comments) {
       id
-      title
-      completed
-    }
-  }
-`;
-
-export const TOGGLE_POST = gql`
-  mutation TogglePost($id: ID!) {
-    togglePost(id: $id) {
-      id
-      completed
+      author
+      content
+      comments {
+        id
+        author
+        content
+      }
     }
   }
 `;
