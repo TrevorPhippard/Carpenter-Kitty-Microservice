@@ -14,8 +14,8 @@ COPY . .
 # Compile TypeScript
 RUN npm run build
 
-# Expose port used by the app
-EXPOSE 1337
+# Expose port
+EXPOSE 4003
 
-# Push Prisma schema to database and start the built app
-CMD ["sh", "-c", "npm run start"]
+# Run seed and start service
+CMD ["sh", "-c", "node dist/models/seed.js && echo 'Seed completed' && npm run start"]
