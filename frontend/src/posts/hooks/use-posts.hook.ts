@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { graphqlClient } from "../lib/graphqlClient";
-import { GET_POSTS, ADD_POST } from "../lib/posts";
+import { graphqlClient } from "../../lib/graphqlClient";
+import { GET_POSTS, ADD_POST } from "../apis/posts.graph";
 
 type CommentInput = {
   author: string;
@@ -23,7 +23,6 @@ type Post = {
 export const usePosts = () => {
   const queryClient = useQueryClient();
 
-  // Fetch posts
   const query = useQuery({
     queryKey: ["posts"],
     queryFn: async () => {
@@ -32,7 +31,6 @@ export const usePosts = () => {
     },
   });
 
-  // Add Post
   const addPost = useMutation({
     mutationFn: async (input: AddPostInput) => {
       const data = await graphqlClient.request<{ addPost: Post }>(

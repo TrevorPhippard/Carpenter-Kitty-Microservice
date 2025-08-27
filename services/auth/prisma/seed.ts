@@ -9,7 +9,6 @@ async function main() {
   const username = "testuser";
   const password = "test";
 
-  // Check if profile exists
   const existing = await prisma.user.findFirst({ where: { username } });
   const hashedPassword = await bcrypt.hash(password, 10); // salt rounds = 10
 

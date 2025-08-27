@@ -9,12 +9,12 @@ const app = express();
 
 app.use(
   cors({
-    origin: "http://localhost:5173", // frontend origin
+    origin: "http://localhost:5173",
     credentials: true,
   })
 );
 app.use(bodyParser.json());
-app.use("/api/auth", authRoutes);
+app.use("/api/v1/auth", authRoutes);
 
 // client.collectDefaultMetrics();
 

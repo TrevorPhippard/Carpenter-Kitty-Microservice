@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import { usePosts } from "../hooks/usePosts";
-import { type AddPostInput, type Post, type Comment } from "../types/api";
+import { usePosts } from "../posts/hooks/use-posts.hook";
+import { type AddPostInput, type Post } from "../types/api";
 
 export const Route = createFileRoute("/posts")({
   component: Posts,
@@ -10,7 +10,6 @@ export const Route = createFileRoute("/posts")({
 function Posts() {
   const { data: posts, isLoading, addPost } = usePosts();
 
-  // Separate inputs for author and content
   const [author, setAuthor] = useState("");
   const [content, setContent] = useState("");
 
@@ -22,7 +21,6 @@ function Posts() {
     const newPost: AddPostInput = {
       author: author.trim(),
       content: content.trim(),
-      // Optionally, you can handle comments here if you want
       // comments: [],
     };
 

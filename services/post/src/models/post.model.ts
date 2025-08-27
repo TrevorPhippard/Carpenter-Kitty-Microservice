@@ -1,4 +1,3 @@
-// services/posts/models/post.model.ts
 import mongoose from "mongoose";
 
 const commentSchema = new mongoose.Schema({

@@ -79,13 +79,14 @@ services:
       retries: 5
   gateway:
     build: ./gateway
-    depends_on:
-      post:
-        condition: service_healthy
+    # depends_on:
+    #   post:
+    #     condition: service_healthy
     ports:
       - "4000:4000"
     networks:
       - app-network
+# docker-compose restart gateway -d
 
 networks:
   app-network:

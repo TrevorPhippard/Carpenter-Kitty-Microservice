@@ -1,4 +1,3 @@
-// services/posts/seed.ts
 import mongoose from "mongoose";
 import { Post } from "./post.model.js";
 
@@ -8,7 +7,7 @@ const MONGO_URL =
 mongoose.connect(MONGO_URL).then(async () => {
   console.log("Connected to MongoDB for seeding");
 
-  await Post.deleteMany({}); // Clear existing data
+  await Post.deleteMany({});
 
   const posts = [
     {

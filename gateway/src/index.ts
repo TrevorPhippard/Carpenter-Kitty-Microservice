@@ -13,5 +13,3 @@ const { url } = await startStandaloneServer(server, {
 });
 
 console.log(`🚀 Gateway ready at ${url}`);
-
-// docker-compose restart gateway -d

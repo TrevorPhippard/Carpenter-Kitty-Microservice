@@ -83,6 +83,6 @@ const server = new ApolloServer({
 });
 
 const { url } = await startStandaloneServer(server, {
-  listen: { port: 4003, host: "0.0.0.0" }, // Add host here
+  listen: { port: 4003, host: "0.0.0.0" },
 });
 console.log(`Posts service running at ${url}`);
