@@ -1,5 +1,6 @@
 import express from "express";
 import cors from "cors";
+import listRoutes from "./routeLister";
 
 // import client from "prom-client";
 import authRoutes from "./auth.controller";
@@ -22,6 +23,9 @@ app.get("/", (_req, res) => res.send("Auth service is running"));
 //   res.set("Content-Type", client.register.contentType);
 //   res.end(await client.register.metrics());
 // });
+listRoutes(app);
+
+export default app;
 
 const PORT = parseInt(process.env.PORT || "4001", 10);
 

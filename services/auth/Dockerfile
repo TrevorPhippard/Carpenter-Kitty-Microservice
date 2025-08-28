@@ -8,22 +8,23 @@ ENV NODE_ENV=development
 # Set working directory
 WORKDIR /usr/src/app
 
-# Install dependencies using cache and bind mount (requires BuildKit)
-RUN --mount=type=bind,source=package.json,target=package.json \
-  --mount=type=bind,source=package-lock.json,target=package-lock.json \
-  --mount=type=cache,target=/root/.npm \
-  npm ci --include=dev
+# Copy only package files first to leverage cache
+COPY package.json package-lock.json ./
 
+# Install dependencies (cached if package files unchanged)
+RUN npm ci --include=dev
+
+# Copy the rest of the source code (node_modules ignored via .dockerignore)
 COPY . .
 
-# Generate Prisma client (important)
+# Generate Prisma client (does not require DB connection)
 RUN npx prisma generate
 
-# Compile TypeScript to JavaScript (creates dist/)
+# Compile TypeScript to JavaScript
 RUN npm run build
 
-# Expose port used by the app
+# Expose app port
 EXPOSE 4001
 
-# Push Prisma schema to database and start the built app
-CMD ["sh", "-c", "npx prisma db push && echo 'Pushed schema' && npm run seed && echo 'Seed ran' && npm run start"]
+# Push Prisma schema, seed DB, and start app at runtime
+CMD ["sh", "-c", "npx prisma db push && echo 'Schema pushed' && npm run seed && echo 'Seed ran' && npm run start"]

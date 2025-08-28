@@ -65,7 +65,9 @@ docker-compose up --build
 ```
 
 - may have to restart services a couple of times manually in docker hub to get them all to connect properly
+
 need to write wait-for-it script at some point
+also may have to run "npm run seed" from inside you container, still working on that
 
 ---
 

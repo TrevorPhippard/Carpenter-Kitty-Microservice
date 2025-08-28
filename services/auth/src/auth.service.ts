@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt";
-import jwt, { SignOptions } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
@@ -78,6 +78,10 @@ export const getUser = async (token: string) => {
 };
 
 export const signOut = async () => ({ message: "Signed out successfully" });
+
+export const getSessions = async () => ({
+  message: "Retrieved user sessions successfully",
+});
 
 export const resetPassword = async ({
   email,

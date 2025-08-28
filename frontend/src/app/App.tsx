@@ -5,15 +5,15 @@ import { RouterProvider } from "@tanstack/react-router";
 import { routeTree } from "../routeTree.gen";
 import { createRouter } from "@tanstack/react-router";
 import { AuthProvider } from "./providers/auth/provider";
-import { useAuth } from "../lib/auth-context";
+// import { useAuth } from "../lib/auth-context";
 
 export default function App() {
   const queryClient = new QueryClient();
-  const auth = useAuth();
+  // const auth = useAuth();
 
   const router = createRouter({
     routeTree,
-    context: { auth },
+    // context: { auth },
   });
   return (
     <StrictMode>

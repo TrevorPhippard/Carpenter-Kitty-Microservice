@@ -5,6 +5,7 @@ import {
   getUser,
   signOut,
   resetPassword,
+  getSessions,
 } from "./auth.service";
 import { authenticateJWT, AuthRequest } from "./jwt";
 
@@ -21,11 +22,11 @@ const handleRequest = (fn: Function) => async (req: Request, res: Response) => {
   }
 };
 
-router.post("/", (_req, res) => res.send("Auth route / is running"));
+router.post("/sign-up/email", handleRequest(signUp));
 
-router.post("/sign-up", handleRequest(signUp));
+router.post("/sign-in/email", handleRequest(signIn));
 
-router.post("/sign-in", handleRequest(signIn));
+router.get("/get-session", handleRequest(getSessions));
 
 router.get("/me", authenticateJWT, async (req: AuthRequest, res: Response) => {
   try {
