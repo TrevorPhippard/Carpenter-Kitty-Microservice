@@ -73,7 +73,12 @@ const resolvers = {
 
   Post: {
     __resolveReference(post: PostModel) {
-      return { id: post.id, content: "opinion", author: "test", comments: [] };
+      return {
+        id: post.id,
+        content: post.content,
+        author: post.author,
+        comments: [],
+      };
     },
   },
 };
@@ -83,6 +88,6 @@ const server = new ApolloServer({
 });
 
 const { url } = await startStandaloneServer(server, {
-  listen: { port: 4003, host: "0.0.0.0" },
+  listen: { port: 4002, host: "0.0.0.0" },
 });
 console.log(`Posts service running at ${url}`);

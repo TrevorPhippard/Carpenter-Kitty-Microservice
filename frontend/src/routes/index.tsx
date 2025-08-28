@@ -3,7 +3,7 @@ import { createFileRoute } from "@tanstack/react-router";
 export const Route = createFileRoute("/")({
   component: Index,
   loader: async () => {
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    await new Promise((resolve) => setTimeout(resolve, 100));
     // throw new Error()
     return {
       someId: "Trevor",
@@ -18,7 +18,7 @@ function Index() {
 
   return (
     <div className="p-2">
-      <h3>Welcome Home, {someId}!</h3>
+      <h3>Bye, {someId}!</h3>
     </div>
   );
 }
