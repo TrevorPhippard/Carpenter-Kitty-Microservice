@@ -9,8 +9,7 @@ import { User as UserModel } from "./models/user.model.js";
 console.log("Users service starting...");
 
 const MONGO_URL =
-  process.env.USERS_DATABASE_URL || "mongodb://localhost:27017/users";
-process.env.POSTS_DATABASE_URL || "mongodb://localhost:27017/posts";
+  process.env.USERS_DATABASE_URL || "mongodb://user-db:27017/users";
 
 mongoose.connect(MONGO_URL).then(() => console.log("Connected to MongoDB"));
 

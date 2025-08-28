@@ -93,7 +93,7 @@ services:
     volumes:
       - ./services/user:/usr/src/app
     environment:
-      DATABASE_URL: ${USERS_DATABASE_URL}
+      USERS_DATABASE_URL: ${USERS_DATABASE_URL}
       PORT: "4004"
     depends_on:
       user-db:
