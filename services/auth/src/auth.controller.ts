@@ -1,40 +1,45 @@
 import express, { Request, Response } from "express";
-import { registerUser, loginUser } from "./auth.service";
+import {
+  signUp,
+  signIn,
+  getUser,
+  signOut,
+  resetPassword,
+} from "./auth.service";
+import { authenticateJWT, AuthRequest } from "./jwt";
 
 const router = express.Router();
 
-router.post("/register", async (req: Request, res: Response) => {
+const handleRequest = (fn: Function) => async (req: Request, res: Response) => {
   try {
-    const { email, username, password } = req.body;
-    if (!email || !username || !password) {
-      return res
-        .status(400)
-        .json({ error: "Email, username and password are required" });
-    }
+    const result = await fn(req.body || req.headers);
+    res.json(result);
+  } catch (err: any) {
+    res
+      .status(err.status || 400)
+      .json({ error: err.message || "Something went wrong" });
+  }
+};
 
-    const result = await registerUser(email, username, password);
-    res.status(201).json(result);
-  } catch (error: any) {
-    res.status(400).json({ error: error.message || "Registration failed" });
+router.post("/", (_req, res) => res.send("Auth route / is running"));
+
+router.post("/sign-up", handleRequest(signUp));
+
+router.post("/sign-in", handleRequest(signIn));
+
+router.get("/me", authenticateJWT, async (req: AuthRequest, res: Response) => {
+  try {
+    const result = await getUser(req.headers.authorization!.split(" ")[1]);
+    res.json(result);
+  } catch (err: any) {
+    res
+      .status(err.status || 400)
+      .json({ error: err.message || "Something went wrong" });
   }
 });
 
-router.post("/login", async (req: Request, res: Response) => {
-  try {
-    const { email, password } = req.body;
-    if (!email || !password) {
-      return res.status(400).json({ error: "Email and password are required" });
-    }
+router.post("/sign-out", handleRequest(signOut));
 
-    const result = await loginUser(email, password);
-    if (!result) {
-      return res.status(401).json({ error: "Invalid email or password" });
-    }
-
-    res.status(200).json(result);
-  } catch (error: any) {
-    res.status(500).json({ error: "Authentication failed" });
-  }
-});
+router.post("/reset-password", handleRequest(resetPassword));
 
 export default router;

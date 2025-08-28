@@ -1,16 +1,30 @@
-import jwt, { SignOptions } from "jsonwebtoken";
+import { Request, Response, NextFunction } from "express";
+import jwt from "jsonwebtoken";
 
-const secret: string = process.env.JWT_SECRET!;
+const JWT_SECRET = process.env.JWT_SECRET as string;
 
-export function signJwt(payload: object, expiresIn: string = "1h"): string {
-  const options: SignOptions = { expiresIn: expiresIn as any }; // cast to bypass TS
-  return jwt.sign(payload, secret, options);
+export interface AuthRequest extends Request {
+  userId?: number;
 }
 
-export function verifyJwt(token: string) {
+interface JwtPayload {
+  userId: number;
+}
+
+export const authenticateJWT = (
+  req: AuthRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader) return res.status(401).json({ error: "No token provided" });
+
+  const token = authHeader.split(" ")[1];
   try {
-    return jwt.verify(token, secret);
+    const payload = jwt.verify(token, JWT_SECRET) as JwtPayload;
+    req.userId = payload.userId;
+    next();
   } catch (err) {
-    return null;
+    return res.status(401).json({ error: "Invalid token" });
   }
-}
+};
