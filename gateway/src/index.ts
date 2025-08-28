@@ -3,11 +3,11 @@ import { startStandaloneServer } from "@apollo/server/standalone";
 import { ApolloGateway, IntrospectAndCompose } from "@apollo/gateway";
 
 const postsUrl =
-  process.env.POSTS_SUBGRAPH_URL || "http://localhost:4002/graphql";
+  process.env.POSTS_SUBGRAPH_URL || "http://localhost:4001/graphql";
 const feedUrl =
-  process.env.FEED_SUBGRAPH_URL || "http://localhost:4003/graphql";
+  process.env.FEED_SUBGRAPH_URL || "http://localhost:4002/graphql";
 const usersUrl =
-  process.env.USERS_SUBGRAPH_URL || "http://localhost:4004/graphql";
+  process.env.USERS_SUBGRAPH_URL || "http://localhost:4003/graphql";
 
 const supergraphSdl = new IntrospectAndCompose({
   subgraphs: [

@@ -64,6 +64,9 @@ Open your browser at [http://localhost:5173](http://localhost:5173)
 docker-compose up --build
 ```
 
+- may have to restart services a couple of times manually in docker hub to get them all to connect properly
+need to write wait-for-it script at some point
+
 ---
 
 ## **Tentative Roadmap**

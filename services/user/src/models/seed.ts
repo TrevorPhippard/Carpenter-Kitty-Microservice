@@ -1,8 +1,7 @@
 import mongoose from "mongoose";
 import { User } from "./user.model.js";
 
-const MONGO_URL =
-  process.env.POSTS_DATABASE_URL || "mongodb://localhost:27017/posts_db";
+const MONGO_URL = process.env.POSTS_DATABASE_URL || "mongo:27017/postdb";
 
 mongoose.connect(MONGO_URL).then(async () => {
   console.log("Connected to MongoDB for seeding");

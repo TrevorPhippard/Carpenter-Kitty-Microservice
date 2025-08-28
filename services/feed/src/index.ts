@@ -18,7 +18,7 @@ const typeDefs = gql`
 `;
 
 const USERS_URL =
-  process.env.USERS_SUBGRAPH_URL || "http://localhost:4004/graphql";
+  process.env.USERS_SUBGRAPH_URL || "http://localhost:4001/graphql";
 const POSTS_URL =
   process.env.POSTS_SUBGRAPH_URL || "http://localhost:4002/graphql";
 

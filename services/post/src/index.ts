@@ -9,7 +9,7 @@ import { Post as PostModel } from "./models/post.model.js";
 console.log("Posts service starting...");
 
 const MONGO_URL =
-  process.env.POSTS_DATABASE_URL || "mongodb://localhost:27017/posts_db";
+  process.env.POSTS_DATABASE_URL || "mongodb://localhost:27017/posts";
 
 mongoose.connect(MONGO_URL).then(() => console.log("Connected to MongoDB"));
 

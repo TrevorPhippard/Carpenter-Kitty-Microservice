@@ -36,6 +36,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.33.0",
+    "@playwright/test": "^1.55.0",
     "@tanstack/router-plugin": "^1.131.27",
     "@tanstack/router-vite-plugin": "^1.131.27",
     "@types/react": "^19.1.11",

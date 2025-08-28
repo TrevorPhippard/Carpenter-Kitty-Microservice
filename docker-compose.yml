@@ -93,7 +93,7 @@ services:
     volumes:
       - ./services/user:/usr/src/app
     environment:
-      DATABASE_URL: ${USER_DATABASE_URL}
+      DATABASE_URL: ${USERS_DATABASE_URL}
       PORT: "4004"
     depends_on:
       user-db:
@@ -158,7 +158,7 @@ services:
     networks:
       - app-network
     healthcheck:
-      test: ["CMD-SHELL", "mongosh --eval 'db.adminCommand(\"ping\")' || exit 1"]
+      test: ["CMD-SHELL", "mongo --eval 'db.adminCommand(\"ping\")' || exit 1"]
       interval: 10s
       timeout: 10s
       retries: 10
@@ -174,7 +174,7 @@ services:
     networks:
       - app-network
     healthcheck:
-      test: ["CMD-SHELL", "mongosh --eval 'db.adminCommand(\"ping\")' || exit 1"]
+      test: ["CMD-SHELL", "mongo --eval 'db.adminCommand(\"ping\")' || exit 1"]
       interval: 10s
       timeout: 10s
       retries: 10
