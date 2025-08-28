@@ -21,7 +21,7 @@ export function Navbar() {
             {linkData}
           </Link>
         ))}
-        <Link to="/" className="[&.active]:font-bold">
+        <Link to="/login" className="[&.active]:font-bold">
           SignOut
         </Link>
       </div>

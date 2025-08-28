@@ -20,14 +20,12 @@ export function PostForm() {
     };
 
     addPost.mutate(newPost);
-    setAuthor("");
+    setAuthor("Trevor");
     setContent("");
   };
 
   return (
     <div className="p-4 max-w-md mx-auto">
-      <h2 className="text-2xl font-bold mb-4">Posts</h2>
-
       <div className="flex flex-col gap-2 mb-4">
         <input
           type="text"
@@ -51,6 +49,7 @@ export function PostForm() {
         </button>
       </div>
 
+      <h2 className="text-2xl font-bold mb-4">Recent Posts</h2>
       <ul className="space-y-2">
         {posts?.map((postEntry) => (
           <li key={postEntry.id} className="p-2 border rounded">
@@ -62,12 +61,11 @@ export function PostForm() {
                 <ul className="ml-4 mt-2 space-y-1 text-sm text-gray-600">
                   {postEntry.comments
                     .filter((comment) => comment)
-                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                    .map((_comment) => (
-                      <li key={Math.random()}>
-                        <em>test</em>:test
+
+                    .map((comment) => (
+                      <li key={comment.id}>
+                        <em>{comment.author}</em>: {comment.content}
                       </li>
-                      //<li key={comment.id}><em>{comment.author}</em>: {comment.content}</li>
                     ))}
                 </ul>
               )}

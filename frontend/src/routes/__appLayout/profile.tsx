@@ -1,9 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useParams } from "@tanstack/react-router";
-import { Avatar } from "../components/ui/Avatar";
+import { Avatar } from "../../components/ui/Avatar";
 import { useQuery } from "@tanstack/react-query";
-import { PostCard } from "../components/ui/PostCard";
-import { fetchProfile } from "../lib/mocks";
+import { PostCard } from "../../components/ui/PostCard";
+import { fetchProfile } from "../../lib/mocks";
 
 export const Route = createFileRoute("/__appLayout/profile")({
   component: Component,

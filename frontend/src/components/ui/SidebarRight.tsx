@@ -1,6 +1,6 @@
 export function RightSidebar() {
   return (
-    <aside>
+    <aside className="hidden lg:block w-64 shrink-0">
       <div className="bg-white rounded-lg shadow p-4 space-y-4 sticky top-20">
         <h3 className="font-semibold text-gray-800">Trending</h3>
         <ul className="text-sm text-gray-700 space-y-2">

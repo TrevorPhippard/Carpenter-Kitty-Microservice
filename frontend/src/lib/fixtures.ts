@@ -5,6 +5,25 @@ export const posts = [
     headline: "Software Engineer",
     content: "Just finished a new project in React!",
     timestamp: "2h ago",
+    comments: [
+      {
+        content: "okay but try running this on vercel!",
+        author: "Troll",
+        createdAt: Date.now,
+      },
+      {
+        content: "Yay!",
+        author: "Friend",
+        createdAt: Date.now,
+      },
+      {
+        content: "nothing beats a jet2 holiday",
+        author: "Bot",
+        createdAt: Date.now,
+      },
+    ],
+    likes: 20,
+    shares: 3,
   },
   {
     id: "p2",
@@ -12,6 +31,9 @@ export const posts = [
     headline: "Product Manager",
     content: "Excited about our new launch 🚀",
     timestamp: "5h ago",
+    comments: [],
+    likes: 20,
+    shares: 3,
   },
 ];
 
