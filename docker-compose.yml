@@ -1,98 +1,200 @@
 services:
   # ----------------------------------------------------------------
-  # DATABASES
+  # Tools
+  # ----------------------------------------------------------------
+  pgadmin:
+    image: dpage/pgadmin4
+    profiles: ["debug"]
+    command: tail -f /dev/null
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL:-admin@example.com}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:-adminpassword}
+    ports:
+      - "${PGADMIN_PORT:-8080}:80"
+    depends_on:
+      auth-db:
+        condition: service_healthy
+    volumes:
+      - ./pgadmin/servers.json:/pgadmin4/servers.json:ro
+      - pgadmin_data:/var/lib/pgadmin
+    networks:
+      - app-network
+
+  # ----------------------------------------------------------------
+  # Gateway
+  # ----------------------------------------------------------------
+  gateway:
+    build: ./gateway
+    profiles: ["debug"]
+    command: node --inspect=0.0.0.0:9229 dist/index.js
+    volumes:
+      - ./gateway:/usr/src/app
+    environment:
+      POSTS_SUBGRAPH_URL: "http://post:4002/graphql"
+      FEED_SUBGRAPH_URL:  "http://feed:4003/graphql"
+      USERS_SUBGRAPH_URL: "http://user:4004/graphql"
+    depends_on:
+      user:
+        condition: service_healthy
+      post:
+        condition: service_healthy
+      feed:
+        condition: service_healthy
+    ports:
+      - "4000:4000"
+      - "9220:9229" # debugger
+    networks:
+      - app-network
+
+  # ----------------------------------------------------------------
+  # Microservices
+  # ----------------------------------------------------------------
+  auth:
+    build: ./services/auth
+    profiles: ["debug"]
+    command: node --inspect=0.0.0.0:9229 dist/index.js
+    volumes:
+      - ./services/auth:/usr/src/app
+    env_file: .env
+    environment:
+      DATABASE_URL: ${AUTH_DATABASE_URL}
+      JWT_SECRET: ${JWT_SECRET}
+    depends_on:
+      auth-db:
+        condition: service_healthy
+    ports:
+      - "4001:4001"
+      - "9221:9229"
+    networks:
+      - app-network
+
+  post:
+    build: ./services/post
+    profiles: ["debug"]
+    command: node --inspect=0.0.0.0:9229 dist/index.js
+    volumes:
+      - ./services/post:/usr/src/app
+    env_file: .env
+    environment:
+      POSTS_DATABASE_URL: ${POSTS_DATABASE_URL}
+    depends_on:
+      post-db:
+        condition: service_healthy
+    ports:
+      - "4002:4002"
+      - "9222:9229"
+    networks:
+      - app-network
+
+  user:
+    build: ./services/user
+    profiles: ["debug"]
+    command: node --inspect=0.0.0.0:9229 dist/index.js
+    volumes:
+      - ./services/user:/usr/src/app
+    environment:
+      DATABASE_URL: ${USER_DATABASE_URL}
+      PORT: "4004"
+    depends_on:
+      user-db:
+        condition: service_healthy
+    ports:
+      - "4004:4004"
+      - "9223:9229"
+    networks:
+      - app-network
+
+  feed:
+    build: ./services/feed
+    profiles: ["debug"]
+    command: node --inspect=0.0.0.0:9229 dist/index.js
+    volumes:
+      - ./services/feed:/usr/src/app
+    environment:
+      USERS_SUBGRAPH_URL: "http://user:4004/graphql"
+      POSTS_SUBGRAPH_URL: "http://post:4002/graphql"
+      PORT: "4003"
+    depends_on:
+      user:
+        condition: service_healthy
+      post:
+        condition: service_healthy
+    ports:
+      - "4003:4003"
+      - "9224:9229"
+    networks:
+      - app-network
+
+  # ----------------------------------------------------------------
+  # Databases (always restart)
   # ----------------------------------------------------------------
   auth-db:
     image: postgres:15
-    container_name: auth-db
     restart: always
     environment:
       POSTGRES_DB: ${AUTH_DB_NAME}
       POSTGRES_USER: ${AUTH_DB_USER}
       POSTGRES_PASSWORD: ${AUTH_DB_PASSWORD}
     ports:
-      - "5433:5432" # external:internal
+      - "${AUTH_DB_PORT:-5433}:5432"
     volumes:
       - auth_data:/var/lib/postgresql/data
     networks:
       - app-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER}"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+      start_period: 20s
 
   post-db:
     image: mongo:6
-    container_name: post-db
     restart: always
+    ports:
+      - "${POST_DB_PORT:-27017}:27017"
     volumes:
-      - mongodata:/data/db
-    ports:
-      - "27017:27017"
-    networks:
-      - app-network
-
-  # ----------------------------------------------------------------
-  # Tools
-  # ----------------------------------------------------------------
-
-  pgadmin:
-    image: dpage/pgadmin4
-    container_name: my-pgadmin
-    environment:
-      PGADMIN_DEFAULT_EMAIL: admin@example.com
-      PGADMIN_DEFAULT_PASSWORD: adminpassword
-    ports:
-      - "8080:80" # Map host port 8080 to container port 80
-    depends_on: [auth-db]
-    volumes:
-      - ./pgadmin/servers.json:/pgadmin4/servers.json:ro  # pre-load servers
-      - pgadmin_data:/var/lib/pgadmin
-    networks:
-      - app-network
-
-  # ----------------------------------------------------------------
-  # Services
-  # ----------------------------------------------------------------
-  auth:
-    build: ./services/auth
-    env_file: .env
-    environment:
-      JWT_SECRET: ${JWT_SECRET}
-      DATABASE_URL: ${AUTH_DATABASE_URL}
-    depends_on: [auth-db]
-    ports:
-      - "4001:4001"
-    networks:
-      - app-network
-
-  post:
-    build: ./services/post
-    env_file: .env
-    environment:
-      POSTS_DATABASE_URL: ${POST_SERVICE_URL}
-    depends_on: [post-db]
-    ports:
-      - "4003:4003"
+      - post_data:/data/db
     networks:
       - app-network
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:4003"]
-      interval: 30s
+      test: ["CMD-SHELL", "mongosh --eval 'db.adminCommand(\"ping\")' || exit 1"]
+      interval: 10s
       timeout: 10s
-      retries: 5
-  gateway:
-    build: ./gateway
-    # depends_on:
-    #   post:
-    #     condition: service_healthy
+      retries: 10
+      start_period: 20s
+
+  user-db:
+    image: mongo:6
+    restart: always
     ports:
-      - "4000:4000"
+      - "${USER_DB_PORT:-27018}:27017"
+    volumes:
+      - user_data:/data/db
     networks:
       - app-network
-# docker-compose restart gateway -d
+    healthcheck:
+      test: ["CMD-SHELL", "mongosh --eval 'db.adminCommand(\"ping\")' || exit 1"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+      start_period: 20s
 
+# ----------------------------------------------------------------
+# Networks & Volumes
+# ----------------------------------------------------------------
 networks:
   app-network:
     driver: bridge
 
 volumes:
   auth_data:
-  mongodata:
+  post_data:
+  user_data:
   pgadmin_data:
+
+
+# ----------------------------------------------------------------
+# docker compose --profile debug up -d
+# docker compose logs -f user
+# ----------------------------------------------------------------

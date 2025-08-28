@@ -9,30 +9,25 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as RegisterRouteImport } from './routes/register'
-import { Route as PostsRouteImport } from './routes/posts'
-import { Route as LoginRouteImport } from './routes/login'
-import { Route as AboutRouteImport } from './routes/about'
+import { Route as _publicLayoutRouteImport } from './routes/__publicLayout'
+import { Route as _appLayoutRouteImport } from './routes/__appLayout'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as _publicLayoutRegesterRouteImport } from './routes/__publicLayout/regester'
+import { Route as _publicLayoutLoginRouteImport } from './routes/__publicLayout/login'
+import { Route as _appLayoutSettingsRouteImport } from './routes/__appLayout/settings'
+import { Route as _appLayoutProfileRouteImport } from './routes/__appLayout/profile'
+import { Route as _appLayoutMessagesRouteImport } from './routes/__appLayout/messages'
+import { Route as _appLayoutFeedRouteImport } from './routes/__appLayout/feed'
+import { Route as _appLayoutDashboardRouteImport } from './routes/__appLayout/dashboard'
+import { Route as _appLayoutConnectionRouteImport } from './routes/__appLayout/connection'
+import { Route as _appLayoutAboutRouteImport } from './routes/__appLayout/about'
 
-const RegisterRoute = RegisterRouteImport.update({
-  id: '/register',
-  path: '/register',
+const _publicLayoutRoute = _publicLayoutRouteImport.update({
+  id: '/__publicLayout',
   getParentRoute: () => rootRouteImport,
 } as any)
-const PostsRoute = PostsRouteImport.update({
-  id: '/posts',
-  path: '/posts',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LoginRoute = LoginRouteImport.update({
-  id: '/login',
-  path: '/login',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AboutRoute = AboutRouteImport.update({
-  id: '/about',
-  path: '/about',
+const _appLayoutRoute = _appLayoutRouteImport.update({
+  id: '/__appLayout',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -40,73 +35,152 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const _publicLayoutRegesterRoute = _publicLayoutRegesterRouteImport.update({
+  id: '/regester',
+  path: '/regester',
+  getParentRoute: () => _publicLayoutRoute,
+} as any)
+const _publicLayoutLoginRoute = _publicLayoutLoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => _publicLayoutRoute,
+} as any)
+const _appLayoutSettingsRoute = _appLayoutSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => _appLayoutRoute,
+} as any)
+const _appLayoutProfileRoute = _appLayoutProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => _appLayoutRoute,
+} as any)
+const _appLayoutMessagesRoute = _appLayoutMessagesRouteImport.update({
+  id: '/messages',
+  path: '/messages',
+  getParentRoute: () => _appLayoutRoute,
+} as any)
+const _appLayoutFeedRoute = _appLayoutFeedRouteImport.update({
+  id: '/feed',
+  path: '/feed',
+  getParentRoute: () => _appLayoutRoute,
+} as any)
+const _appLayoutDashboardRoute = _appLayoutDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => _appLayoutRoute,
+} as any)
+const _appLayoutConnectionRoute = _appLayoutConnectionRouteImport.update({
+  id: '/connection',
+  path: '/connection',
+  getParentRoute: () => _appLayoutRoute,
+} as any)
+const _appLayoutAboutRoute = _appLayoutAboutRouteImport.update({
+  id: '/about',
+  path: '/about',
+  getParentRoute: () => _appLayoutRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/about': typeof AboutRoute
-  '/login': typeof LoginRoute
-  '/posts': typeof PostsRoute
-  '/register': typeof RegisterRoute
+  '/about': typeof _appLayoutAboutRoute
+  '/connection': typeof _appLayoutConnectionRoute
+  '/dashboard': typeof _appLayoutDashboardRoute
+  '/feed': typeof _appLayoutFeedRoute
+  '/messages': typeof _appLayoutMessagesRoute
+  '/profile': typeof _appLayoutProfileRoute
+  '/settings': typeof _appLayoutSettingsRoute
+  '/login': typeof _publicLayoutLoginRoute
+  '/regester': typeof _publicLayoutRegesterRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/about': typeof AboutRoute
-  '/login': typeof LoginRoute
-  '/posts': typeof PostsRoute
-  '/register': typeof RegisterRoute
+  '/about': typeof _appLayoutAboutRoute
+  '/connection': typeof _appLayoutConnectionRoute
+  '/dashboard': typeof _appLayoutDashboardRoute
+  '/feed': typeof _appLayoutFeedRoute
+  '/messages': typeof _appLayoutMessagesRoute
+  '/profile': typeof _appLayoutProfileRoute
+  '/settings': typeof _appLayoutSettingsRoute
+  '/login': typeof _publicLayoutLoginRoute
+  '/regester': typeof _publicLayoutRegesterRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/about': typeof AboutRoute
-  '/login': typeof LoginRoute
-  '/posts': typeof PostsRoute
-  '/register': typeof RegisterRoute
+  '/__appLayout': typeof _appLayoutRouteWithChildren
+  '/__publicLayout': typeof _publicLayoutRouteWithChildren
+  '/__appLayout/about': typeof _appLayoutAboutRoute
+  '/__appLayout/connection': typeof _appLayoutConnectionRoute
+  '/__appLayout/dashboard': typeof _appLayoutDashboardRoute
+  '/__appLayout/feed': typeof _appLayoutFeedRoute
+  '/__appLayout/messages': typeof _appLayoutMessagesRoute
+  '/__appLayout/profile': typeof _appLayoutProfileRoute
+  '/__appLayout/settings': typeof _appLayoutSettingsRoute
+  '/__publicLayout/login': typeof _publicLayoutLoginRoute
+  '/__publicLayout/regester': typeof _publicLayoutRegesterRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about' | '/login' | '/posts' | '/register'
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/connection'
+    | '/dashboard'
+    | '/feed'
+    | '/messages'
+    | '/profile'
+    | '/settings'
+    | '/login'
+    | '/regester'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/login' | '/posts' | '/register'
-  id: '__root__' | '/' | '/about' | '/login' | '/posts' | '/register'
+  to:
+    | '/'
+    | '/about'
+    | '/connection'
+    | '/dashboard'
+    | '/feed'
+    | '/messages'
+    | '/profile'
+    | '/settings'
+    | '/login'
+    | '/regester'
+  id:
+    | '__root__'
+    | '/'
+    | '/__appLayout'
+    | '/__publicLayout'
+    | '/__appLayout/about'
+    | '/__appLayout/connection'
+    | '/__appLayout/dashboard'
+    | '/__appLayout/feed'
+    | '/__appLayout/messages'
+    | '/__appLayout/profile'
+    | '/__appLayout/settings'
+    | '/__publicLayout/login'
+    | '/__publicLayout/regester'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AboutRoute: typeof AboutRoute
-  LoginRoute: typeof LoginRoute
-  PostsRoute: typeof PostsRoute
-  RegisterRoute: typeof RegisterRoute
+  _appLayoutRoute: typeof _appLayoutRouteWithChildren
+  _publicLayoutRoute: typeof _publicLayoutRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/register': {
-      id: '/register'
-      path: '/register'
-      fullPath: '/register'
-      preLoaderRoute: typeof RegisterRouteImport
+    '/__publicLayout': {
+      id: '/__publicLayout'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof _publicLayoutRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/posts': {
-      id: '/posts'
-      path: '/posts'
-      fullPath: '/posts'
-      preLoaderRoute: typeof PostsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/login': {
-      id: '/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof LoginRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/about': {
-      id: '/about'
-      path: '/about'
-      fullPath: '/about'
-      preLoaderRoute: typeof AboutRouteImport
+    '/__appLayout': {
+      id: '/__appLayout'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof _appLayoutRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -116,15 +190,114 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/__publicLayout/regester': {
+      id: '/__publicLayout/regester'
+      path: '/regester'
+      fullPath: '/regester'
+      preLoaderRoute: typeof _publicLayoutRegesterRouteImport
+      parentRoute: typeof _publicLayoutRoute
+    }
+    '/__publicLayout/login': {
+      id: '/__publicLayout/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof _publicLayoutLoginRouteImport
+      parentRoute: typeof _publicLayoutRoute
+    }
+    '/__appLayout/settings': {
+      id: '/__appLayout/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof _appLayoutSettingsRouteImport
+      parentRoute: typeof _appLayoutRoute
+    }
+    '/__appLayout/profile': {
+      id: '/__appLayout/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof _appLayoutProfileRouteImport
+      parentRoute: typeof _appLayoutRoute
+    }
+    '/__appLayout/messages': {
+      id: '/__appLayout/messages'
+      path: '/messages'
+      fullPath: '/messages'
+      preLoaderRoute: typeof _appLayoutMessagesRouteImport
+      parentRoute: typeof _appLayoutRoute
+    }
+    '/__appLayout/feed': {
+      id: '/__appLayout/feed'
+      path: '/feed'
+      fullPath: '/feed'
+      preLoaderRoute: typeof _appLayoutFeedRouteImport
+      parentRoute: typeof _appLayoutRoute
+    }
+    '/__appLayout/dashboard': {
+      id: '/__appLayout/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof _appLayoutDashboardRouteImport
+      parentRoute: typeof _appLayoutRoute
+    }
+    '/__appLayout/connection': {
+      id: '/__appLayout/connection'
+      path: '/connection'
+      fullPath: '/connection'
+      preLoaderRoute: typeof _appLayoutConnectionRouteImport
+      parentRoute: typeof _appLayoutRoute
+    }
+    '/__appLayout/about': {
+      id: '/__appLayout/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof _appLayoutAboutRouteImport
+      parentRoute: typeof _appLayoutRoute
+    }
   }
 }
 
+interface _appLayoutRouteChildren {
+  _appLayoutAboutRoute: typeof _appLayoutAboutRoute
+  _appLayoutConnectionRoute: typeof _appLayoutConnectionRoute
+  _appLayoutDashboardRoute: typeof _appLayoutDashboardRoute
+  _appLayoutFeedRoute: typeof _appLayoutFeedRoute
+  _appLayoutMessagesRoute: typeof _appLayoutMessagesRoute
+  _appLayoutProfileRoute: typeof _appLayoutProfileRoute
+  _appLayoutSettingsRoute: typeof _appLayoutSettingsRoute
+}
+
+const _appLayoutRouteChildren: _appLayoutRouteChildren = {
+  _appLayoutAboutRoute: _appLayoutAboutRoute,
+  _appLayoutConnectionRoute: _appLayoutConnectionRoute,
+  _appLayoutDashboardRoute: _appLayoutDashboardRoute,
+  _appLayoutFeedRoute: _appLayoutFeedRoute,
+  _appLayoutMessagesRoute: _appLayoutMessagesRoute,
+  _appLayoutProfileRoute: _appLayoutProfileRoute,
+  _appLayoutSettingsRoute: _appLayoutSettingsRoute,
+}
+
+const _appLayoutRouteWithChildren = _appLayoutRoute._addFileChildren(
+  _appLayoutRouteChildren,
+)
+
+interface _publicLayoutRouteChildren {
+  _publicLayoutLoginRoute: typeof _publicLayoutLoginRoute
+  _publicLayoutRegesterRoute: typeof _publicLayoutRegesterRoute
+}
+
+const _publicLayoutRouteChildren: _publicLayoutRouteChildren = {
+  _publicLayoutLoginRoute: _publicLayoutLoginRoute,
+  _publicLayoutRegesterRoute: _publicLayoutRegesterRoute,
+}
+
+const _publicLayoutRouteWithChildren = _publicLayoutRoute._addFileChildren(
+  _publicLayoutRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AboutRoute: AboutRoute,
-  LoginRoute: LoginRoute,
-  PostsRoute: PostsRoute,
-  RegisterRoute: RegisterRoute,
+  _appLayoutRoute: _appLayoutRouteWithChildren,
+  _publicLayoutRoute: _publicLayoutRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

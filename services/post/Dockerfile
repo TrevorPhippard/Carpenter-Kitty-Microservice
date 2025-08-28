@@ -15,7 +15,7 @@ COPY . .
 RUN npm run build
 
 # Expose port
-EXPOSE 4003
+EXPOSE 4002
 
 # Run seed and start service
 CMD ["sh", "-c", "node dist/models/seed.js && echo 'Seed completed' && npm run start"]

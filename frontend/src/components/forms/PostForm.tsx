@@ -1,13 +1,8 @@
-import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import { usePosts } from "../posts/hooks/use-posts.hook";
-import { type AddPostInput, type Post } from "../types/api";
+import { usePosts } from "../../posts/hooks/use-posts.hook";
+import { type AddPostInput } from "../../types/api";
 
-export const Route = createFileRoute("/posts")({
-  component: Posts,
-});
-
-function Posts() {
+export function PostForm() {
   const { data: posts, isLoading, addPost } = usePosts();
 
   const [author, setAuthor] = useState("");
@@ -25,14 +20,12 @@ function Posts() {
     };
 
     addPost.mutate(newPost);
-    setAuthor("");
+    setAuthor("Trevor");
     setContent("");
   };
 
   return (
     <div className="p-4 max-w-md mx-auto">
-      <h2 className="text-2xl font-bold mb-4">Posts</h2>
-
       <div className="flex flex-col gap-2 mb-4">
         <input
           type="text"
@@ -56,21 +49,26 @@ function Posts() {
         </button>
       </div>
 
+      <h2 className="text-2xl font-bold mb-4">Recent Posts</h2>
       <ul className="space-y-2">
-        {posts?.map((postEntry: Post) => (
+        {posts?.map((postEntry) => (
           <li key={postEntry.id} className="p-2 border rounded">
             <div>
               <strong>{postEntry.author}</strong>: {postEntry.content}
             </div>
-            {(postEntry.comments ?? []).length > 0 && (
-              <ul className="ml-4 mt-2 space-y-1 text-sm text-gray-600">
-                {(postEntry.comments ?? []).map((comment) => (
-                  <li key={comment.id}>
-                    <em>{comment.author}</em>: {comment.content}
-                  </li>
-                ))}
-              </ul>
-            )}
+            {Array.isArray(postEntry.comments) &&
+              postEntry.comments.length > 0 && (
+                <ul className="ml-4 mt-2 space-y-1 text-sm text-gray-600">
+                  {postEntry.comments
+                    .filter((comment) => comment)
+
+                    .map((comment) => (
+                      <li key={comment.id}>
+                        <em>{comment.author}</em>: {comment.content}
+                      </li>
+                    ))}
+                </ul>
+              )}
           </li>
         ))}
       </ul>
