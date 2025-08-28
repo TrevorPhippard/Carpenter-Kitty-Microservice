@@ -4,7 +4,7 @@ services:
   # ----------------------------------------------------------------
   pgadmin:
     image: dpage/pgadmin4
-    profiles: ["debug"]
+    # profiles: ["debug"]
     command: tail -f /dev/null
     environment:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL:-admin@example.com}
@@ -25,7 +25,7 @@ services:
   # ----------------------------------------------------------------
   gateway:
     build: ./gateway
-    profiles: ["debug"]
+    # profiles: ["debug"]
     command: node --inspect=0.0.0.0:9229 dist/index.js
     volumes:
       - ./gateway:/usr/src/app
@@ -51,7 +51,7 @@ services:
   # ----------------------------------------------------------------
   auth:
     build: ./services/auth
-    profiles: ["debug"]
+    # profiles: ["debug"]
     command: node --inspect=0.0.0.0:9229 dist/index.js
     volumes:
       - ./services/auth:/usr/src/app
@@ -70,7 +70,7 @@ services:
 
   post:
     build: ./services/post
-    profiles: ["debug"]
+    # profiles: ["debug"]
     command: node --inspect=0.0.0.0:9229 dist/index.js
     volumes:
       - ./services/post:/usr/src/app
@@ -88,7 +88,7 @@ services:
 
   user:
     build: ./services/user
-    profiles: ["debug"]
+    # profiles: ["debug"]
     command: node --inspect=0.0.0.0:9229 dist/index.js
     volumes:
       - ./services/user:/usr/src/app
@@ -106,7 +106,7 @@ services:
 
   feed:
     build: ./services/feed
-    profiles: ["debug"]
+    # profiles: ["debug"]
     command: node --inspect=0.0.0.0:9229 dist/index.js
     volumes:
       - ./services/feed:/usr/src/app

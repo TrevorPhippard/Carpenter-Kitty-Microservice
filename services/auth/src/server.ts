@@ -26,5 +26,5 @@ app.use("/api/v1/auth", authRoutes);
 const PORT = parseInt(process.env.PORT || "4001", 10);
 
 app.listen(PORT, "0.0.0.0", () => {
-  console.log(`Profile service listening on port ${PORT}`);
+  console.log(`Auth service listening on port ${PORT}`);
 });

@@ -1,5 +1,5 @@
 import express, { Request, Response } from "express";
-import { registerUser, authenticateUser } from "./auth.service";
+import { registerUser, loginUser } from "./auth.service";
 
 const router = express.Router();
 
@@ -26,7 +26,7 @@ router.post("/login", async (req: Request, res: Response) => {
       return res.status(400).json({ error: "Email and password are required" });
     }
 
-    const result = await authenticateUser(email, password);
+    const result = await loginUser(email, password);
     if (!result) {
       return res.status(401).json({ error: "Invalid email or password" });
     }
