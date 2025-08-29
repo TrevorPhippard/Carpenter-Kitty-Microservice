@@ -1,4 +1,4 @@
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -9,14 +9,7 @@ export const Route = createFileRoute("/")({
       someId: "Trevor",
     };
   },
-  beforeLoad: ({ context, location }) => {
-    // if (!context.auth.user) {
-    throw redirect({
-      to: "/login",
-      search: { redirect: location.href },
-    });
-    // }
-  },
+
   pendingComponent: () => <div>loading...</div>,
   errorComponent: () => <div>Error Loading</div>,
 });

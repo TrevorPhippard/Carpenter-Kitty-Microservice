@@ -4,23 +4,22 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { RouterProvider } from "@tanstack/react-router";
 import { routeTree } from "../routeTree.gen";
 import { createRouter } from "@tanstack/react-router";
-import { AuthProvider } from "./providers/auth/provider";
-// import { useAuth } from "../lib/auth-context";
+import { createAuthClient } from "../lib/authClient";
 
 export default function App() {
   const queryClient = new QueryClient();
-  // const auth = useAuth();
+  const authClient = createAuthClient({ queryClient });
 
   const router = createRouter({
     routeTree,
-    // context: { auth },
+    context: {
+      context: { authClient, queryClient },
+    },
   });
   return (
     <StrictMode>
       <QueryClientProvider client={queryClient}>
-        <AuthProvider>
-          <RouterProvider router={router} />
-        </AuthProvider>
+        <RouterProvider router={router} />
       </QueryClientProvider>
     </StrictMode>
   );

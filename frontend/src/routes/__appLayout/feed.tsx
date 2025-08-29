@@ -4,8 +4,6 @@ import { PostCard } from "../../components/ui/PostCard";
 import { useQuery } from "@tanstack/react-query";
 import { fetchPosts } from "../../lib/mocks";
 
-// import { useAuthenticate } from "@daveyplate/better-auth-ui";
-
 export const Route = createFileRoute("/__appLayout/feed")({
   component: Component,
 });
