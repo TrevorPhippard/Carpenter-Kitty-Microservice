@@ -1,0 +1,29 @@
+version: '3.8'
+services:
+  db:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: feeddb
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  backend:
+    build: .
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: "postgresql://postgres:password@db:5432/feeddb?schema=public"
+      PORT: 4000
+    ports:
+      - "4000:4000"
+    volumes:
+      - ./:/app
+    command: ["npm", "run", "start:dev"]
+
+volumes:
+  pgdata:

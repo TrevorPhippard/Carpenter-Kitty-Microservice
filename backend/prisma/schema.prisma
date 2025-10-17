@@ -1,0 +1,94 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Invitation {
+  id          String        @id @default(uuid())
+  senderId    String
+  recipientId String
+  status      RequestStatus @default(PENDING)
+  createdAt   DateTime      @default(now())
+
+  sender    User @relation("SentInvites", fields: [senderId], references: [id])
+  recipient User @relation("ReceivedInvites", fields: [recipientId], references: [id])
+}
+
+model Connection {
+  id        String   @id @default(uuid())
+  userAId   String
+  userBId   String
+  createdAt DateTime @default(now())
+
+  userA User @relation("UserAConnections", fields: [userAId], references: [id])
+  userB User @relation("UserBConnections", fields: [userBId], references: [id])
+}
+
+enum RequestStatus {
+  PENDING
+  ACCEPTED
+  DECLINED
+}
+
+model User {
+  id        String  @id @default(uuid())
+  fullName  String
+  avatarUrl String?
+  title     String?
+
+  // 1:1 relation — User has one Profile
+  profile Profile?
+
+  // Relationships
+  posts               Post[]       @relation("UserPosts")
+  comments            Comment[]
+  invitationsSent     Invitation[] @relation("SentInvites")
+  invitationsReceived Invitation[] @relation("ReceivedInvites")
+  connectionsA        Connection[] @relation("UserAConnections")
+  connectionsB        Connection[] @relation("UserBConnections")
+
+  createdAt DateTime @default(now())
+}
+
+model Profile {
+  id     String @id @default(uuid())
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id])
+
+  bio      String?
+  location String?
+  website  String?
+  coverUrl String?
+  skills   String[]
+  data     Json?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Post {
+  id        String    @id @default(uuid())
+  userId    String
+  text      String?
+  content   String?
+  media     String[]  @default([])
+  likes     Int       @default(0)
+  comments  Comment[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime?
+  user      User      @relation("UserPosts", fields: [userId], references: [id])
+}
+
+model Comment {
+  id        String   @id @default(uuid())
+  postId    String
+  userId    String
+  content   String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+  post      Post     @relation(fields: [postId], references: [id])
+}
