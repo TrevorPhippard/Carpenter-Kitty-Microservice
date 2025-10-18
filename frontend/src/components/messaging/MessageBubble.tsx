@@ -12,7 +12,7 @@ export const MessageBubble: React.FC<Props> = ({ text, sender, time }) => {
     <div className={`flex ${isMe ? 'justify-end' : 'justify-start'} mb-2`}>
       <div
         className={`p-2 rounded-lg max-w-xs ${
-          isMe ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-800'
+          isMe ? 'primary text-white' : 'bg-gray-100 text-gray-800'
         }`}
       >
         <p className="text-sm">{text}</p>

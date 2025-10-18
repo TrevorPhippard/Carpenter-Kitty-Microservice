@@ -51,21 +51,9 @@ function LoginForm() {
   }
 
   return (
-    <div className="flex flex-col gap-6">
+    <div>
       <form onSubmit={handleSubmit}>
         <div className="flex flex-col gap-6">
-          <div className="flex flex-col items-center gap-2">
-            <a
-              href="#"
-              className="flex flex-col items-center gap-2 font-medium"
-            >
-              <div className="flex h-8 w-8 items-center justify-center rounded-md">
-                <GalleryVerticalEnd className="size-6" />
-              </div>
-              <span className="sr-only">Acme Inc.</span>
-            </a>
-            <h1 className="text-xl font-bold">Welcome back to Acme Inc.</h1>
-          </div>
           <div className="flex flex-col gap-5">
             <div className="grid gap-2">
               <Label htmlFor="email">Email</Label>
@@ -135,12 +123,13 @@ function LoginForm() {
           </div>
         </div>
       </form>
-
       <div className="text-center text-sm">
         Don&apos;t have an account?{' '}
-        <Link to="/signup" className="underline underline-offset-4">
+        {/* <Link to="/signup" className="underline underline-offset-4">
           Sign up
-        </Link>
+        </Link> */}
+        <br />
+        <p> just go to /feed, we're in development</p>
       </div>
     </div>
   )

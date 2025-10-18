@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
+import { Button } from '@/components//ui/button'
 
 type Notification = {
   id: string
@@ -143,16 +144,16 @@ export const NotificationsFeed: React.FC = () => {
       <div className="flex justify-between items-center mb-2">
         <h2 className="text-lg font-semibold">Notifications</h2>
         <div className="flex gap-2">
-          <button
+          <Button
             onClick={markAllAsRead}
             className="px-3 py-1 border rounded text-sm hover:bg-gray-100"
           >
             Mark All as Read
-          </button>
+          </Button>
           <div className="relative">
-            <button className="px-3 py-1 border rounded text-sm hover:bg-gray-100">
+            <Button className="px-3 py-1 border rounded text-sm hover:bg-gray-100">
               Settings
-            </button>
+            </Button>
           </div>
         </div>
       </div>
@@ -190,7 +191,7 @@ export const NotificationsFeed: React.FC = () => {
               }`}
             >
               {!notif.read && (
-                <span className="w-2 h-2 bg-blue-600 rounded-full"></span>
+                <span className="w-2 h-2 primary rounded-full"></span>
               )}
               <div>
                 <p>{notif.text}</p>

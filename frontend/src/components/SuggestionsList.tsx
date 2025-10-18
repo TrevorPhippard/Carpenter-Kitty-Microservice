@@ -1,5 +1,6 @@
 import type { FullProfile } from '../types/user'
 import Avatar from '@/components/Avatar'
+// import { Button } from '@/components//ui/button'
 
 export function SuggestionsList({
   suggestions,
@@ -22,7 +23,7 @@ export function SuggestionsList({
                 <div className="text-xs text-gray-500">{user.title}</div>
               </div>
             </div>
-            <button className="text-sm bg-white border rounded px-2 py-1">
+            <button className="text-sm bg-white border rounded px-2 py-1 cursor-pointer">
               Connect
             </button>
           </li>

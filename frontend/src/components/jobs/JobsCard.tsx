@@ -24,8 +24,8 @@ export const JobCard: React.FC<Props> = ({ job }) => {
           <p className="text-gray-500 text-sm">{job.location}</p>
         </div>
         {job.easyApply && (
-          <span className="px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded-full font-medium">
-            Easy Apply
+          <span className="px-2 py-1 text-xs bg-pink-100 text-primary rounded-full font-medium">
+            Urgent
           </span>
         )}
       </div>

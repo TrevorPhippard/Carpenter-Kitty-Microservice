@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as authorizedRouteRouteImport } from './routes/(authorized)/route'
+import { Route as authPagesRouteRouteImport } from './routes/(auth-pages)/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ApiMeRouteImport } from './routes/api/me'
 import { Route as authPagesSignupRouteImport } from './routes/(auth-pages)/signup'
@@ -26,6 +27,10 @@ const authorizedRouteRoute = authorizedRouteRouteImport.update({
   id: '/(authorized)',
   getParentRoute: () => rootRouteImport,
 } as any)
+const authPagesRouteRoute = authPagesRouteRouteImport.update({
+  id: '/(auth-pages)',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -37,14 +42,14 @@ const ApiMeRoute = ApiMeRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const authPagesSignupRoute = authPagesSignupRouteImport.update({
-  id: '/(auth-pages)/signup',
+  id: '/signup',
   path: '/signup',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => authPagesRouteRoute,
 } as any)
 const authPagesLoginRoute = authPagesLoginRouteImport.update({
-  id: '/(auth-pages)/login',
+  id: '/login',
   path: '/login',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => authPagesRouteRoute,
 } as any)
 const authorizedNotificationsIndexRoute =
   authorizedNotificationsIndexRouteImport.update({
@@ -113,6 +118,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/(auth-pages)': typeof authPagesRouteRouteWithChildren
   '/(authorized)': typeof authorizedRouteRouteWithChildren
   '/(auth-pages)/login': typeof authPagesLoginRoute
   '/(auth-pages)/signup': typeof authPagesSignupRoute
@@ -155,6 +161,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/(auth-pages)'
     | '/(authorized)'
     | '/(auth-pages)/login'
     | '/(auth-pages)/signup'
@@ -170,9 +177,8 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  authPagesRouteRoute: typeof authPagesRouteRouteWithChildren
   authorizedRouteRoute: typeof authorizedRouteRouteWithChildren
-  authPagesLoginRoute: typeof authPagesLoginRoute
-  authPagesSignupRoute: typeof authPagesSignupRoute
   ApiMeRoute: typeof ApiMeRoute
 }
 
@@ -183,6 +189,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof authorizedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(auth-pages)': {
+      id: '/(auth-pages)'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof authPagesRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -204,14 +217,14 @@ declare module '@tanstack/react-router' {
       path: '/signup'
       fullPath: '/signup'
       preLoaderRoute: typeof authPagesSignupRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof authPagesRouteRoute
     }
     '/(auth-pages)/login': {
       id: '/(auth-pages)/login'
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof authPagesLoginRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof authPagesRouteRoute
     }
     '/(authorized)/notifications/': {
       id: '/(authorized)/notifications/'
@@ -265,6 +278,20 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface authPagesRouteRouteChildren {
+  authPagesLoginRoute: typeof authPagesLoginRoute
+  authPagesSignupRoute: typeof authPagesSignupRoute
+}
+
+const authPagesRouteRouteChildren: authPagesRouteRouteChildren = {
+  authPagesLoginRoute: authPagesLoginRoute,
+  authPagesSignupRoute: authPagesSignupRoute,
+}
+
+const authPagesRouteRouteWithChildren = authPagesRouteRoute._addFileChildren(
+  authPagesRouteRouteChildren,
+)
+
 interface authorizedRouteRouteChildren {
   authorizedProfileUserIdRoute: typeof authorizedProfileUserIdRoute
   authorizedAccountIndexRoute: typeof authorizedAccountIndexRoute
@@ -291,9 +318,8 @@ const authorizedRouteRouteWithChildren = authorizedRouteRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  authPagesRouteRoute: authPagesRouteRouteWithChildren,
   authorizedRouteRoute: authorizedRouteRouteWithChildren,
-  authPagesLoginRoute: authPagesLoginRoute,
-  authPagesSignupRoute: authPagesSignupRoute,
   ApiMeRoute: ApiMeRoute,
 }
 export const routeTree = rootRouteImport

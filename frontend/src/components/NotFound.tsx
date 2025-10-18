@@ -1,4 +1,5 @@
 import { Link } from '@tanstack/react-router'
+import { Button } from '@/components//ui/button'
 
 export function NotFound({ children }: { children?: any }) {
   return (
@@ -10,12 +11,12 @@ export function NotFound({ children }: { children?: any }) {
           {children || 'The page you are looking for does not exist.'}
         </p>
         <div className="flex flex-wrap justify-center gap-4 mt-4">
-          <button
+          <Button
             onClick={() => window.history.back()}
             className="px-4 py-2 bg-emerald-500 text-white rounded-lg font-semibold uppercase text-sm hover:bg-emerald-600 transition"
           >
             Go Back
-          </button>
+          </Button>
           <Link
             to="/"
             className="px-4 py-2 bg-cyan-600 text-white rounded-lg font-semibold uppercase text-sm hover:bg-cyan-700 transition"

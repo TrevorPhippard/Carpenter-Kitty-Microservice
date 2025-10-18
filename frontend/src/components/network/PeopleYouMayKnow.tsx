@@ -1,5 +1,6 @@
 import Avatar from '@/components/Avatar'
 import { useSendInvite, useSuggestions } from '@/hooks/network/useConnections'
+import { Button } from '@/components//ui/button'
 
 export function PeopleYouMayKnow() {
   const { data, isLoading } = useSuggestions()
@@ -23,12 +24,7 @@ export function PeopleYouMayKnow() {
               </div>
             </div>
             {user.id}
-            <button
-              className="px-3 py-1 bg-blue-600 text-white rounded"
-              onClick={() => send.mutate(user.id)}
-            >
-              Connect
-            </button>
+            <Button onClick={() => send.mutate(user.id)}>Connect</Button>
           </li>
         ))}
       </ul>

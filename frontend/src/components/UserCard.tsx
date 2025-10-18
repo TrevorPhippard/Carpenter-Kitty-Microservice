@@ -1,5 +1,6 @@
-import Avatar from '../components/Avatar'
 import type { User } from '../types/user'
+import Avatar from '@/components/Avatar'
+import { Button } from '@/components/ui/button'
 
 export function UserCard({ user }: { user: User }) {
   return (
@@ -23,9 +24,7 @@ export function UserCard({ user }: { user: User }) {
         </div>
       </div>
 
-      <button className="mt-4 w-full bg-blue-600 text-white py-2 rounded hover:brightness-95">
-        Edit
-      </button>
+      <Button className="mt-4 w-full">Edit</Button>
     </div>
   )
 }

@@ -1,6 +1,7 @@
 // frontend/src/components/ui/Postcard/CommentInput.tsx
 import { useState } from 'react'
 import Avatar from '@/components/Avatar'
+import { Button } from '@/components/ui/button'
 
 export function CommentInput({
   currentUser,
@@ -38,13 +39,9 @@ export function CommentInput({
         placeholder="Add a comment..."
         className="flex-1 border border-gray-300 rounded-full px-4 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
       />
-      <button
-        onClick={submit}
-        disabled={!text.trim() || loading}
-        className="text-blue-600 text-sm font-medium disabled:text-gray-400"
-      >
+      <Button onClick={submit} disabled={!text.trim() || loading}>
         {loading ? 'Posting...' : 'Post'}
-      </button>
+      </Button>
     </div>
   )
 }

@@ -72,7 +72,7 @@ export const ConversationList: React.FC<Props> = ({ onSelect, selectedId }) => {
               </div>
             </div>
             {conv.unread && (
-              <span className="w-3 h-3 bg-blue-600 rounded-full"></span>
+              <span className="w-3 h-3 primary rounded-full"></span>
             )}
           </div>
         ))}

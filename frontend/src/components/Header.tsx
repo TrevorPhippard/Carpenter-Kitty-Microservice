@@ -1,6 +1,7 @@
 import { Home, MessagesSquare, Network, SquareFunction } from 'lucide-react'
 // import Avatar from '../components/Avatar'
 import { SearchBar } from './SearchBar'
+import { Logo } from './ui/logo'
 import type { User } from '../types/user'
 import { NavItem } from '@/components/ui/navitem'
 
@@ -10,12 +11,7 @@ export function Header({ user }: { user: User }) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-blue-600 text-white rounded flex items-center justify-center font-bold">
-                cc
-              </div>
-              <span className="font-semibold">Carpenter Cat</span>
-            </div>
+            <Logo />
             <div className="hidden sm:block">
               <SearchBar />
             </div>

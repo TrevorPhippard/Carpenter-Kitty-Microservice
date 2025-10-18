@@ -20,7 +20,7 @@ export function NavItem({ to, label, children, className = '' }: NavItemProps) {
   return (
     <Link
       to={to}
-      className={`flex items-center gap-2 text-blue-600 hover:underline ${className}`}
+      className={`flex items-center gap-2 text-primary hover:underline ${className}`}
     >
       {children}
       <span>{label}</span>

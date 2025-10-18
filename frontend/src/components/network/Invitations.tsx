@@ -3,6 +3,7 @@ import {
   useDeclineInvite,
   useInvitations,
 } from '@/hooks/network/useConnections'
+import { Button } from '@/components//ui/button'
 
 export function Invitations() {
   const { data, isLoading } = useInvitations()
@@ -19,18 +20,8 @@ export function Invitations() {
           <li key={invite.id} className="flex justify-between items-center">
             <span>{invite.sender.fullName}</span>
             <div className="space-x-2">
-              <button
-                className="px-3 py-1 bg-blue-600 text-white rounded"
-                onClick={() => accept.mutate(invite.id)}
-              >
-                Accept
-              </button>
-              <button
-                className="px-3 py-1 bg-gray-200 rounded"
-                onClick={() => decline.mutate(invite.id)}
-              >
-                Decline
-              </button>
+              <Button onClick={() => accept.mutate(invite.id)}>Accept</Button>
+              <Button onClick={() => decline.mutate(invite.id)}>Decline</Button>
             </div>
           </li>
         ))}

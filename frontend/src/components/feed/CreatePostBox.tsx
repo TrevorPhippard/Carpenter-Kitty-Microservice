@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { ActionIcon } from '../ActionIcon'
 import type { ProfileWith } from '../../types/user'
 import { useCreatePost } from '@/hooks/posts/useCreatePost'
+import { Button } from '@/components//ui/button'
 
 export function CreatePostBox({ user }: { user: ProfileWith }) {
   const [text, setText] = useState('')
@@ -37,17 +38,17 @@ export function CreatePostBox({ user }: { user: ProfileWith }) {
               {/* <ActionIcon label="Event" /> */}
               {/* <ActionIcon label="Write article" /> */}
             </div>
-            <button
+            <Button
               onClick={handleSubmit}
               disabled={isCreating || !text.trim()}
               className={`px-4 py-1 rounded text-sm transition ${
                 isCreating || !text.trim()
                   ? 'bg-blue-300 cursor-not-allowed'
-                  : 'bg-blue-600 hover:bg-blue-700 text-white'
+                  : 'bg-primary hover:brightness-95 text-white cursor-pointer'
               }`}
             >
               {isCreating ? 'Posting...' : 'Post'}
-            </button>
+            </Button>
           </div>
         </div>
       </div>
