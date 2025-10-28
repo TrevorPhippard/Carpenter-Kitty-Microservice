@@ -1,0 +1,37 @@
+
+
+GET http://127.0.0.1:5002 HTTP/1.1
+
+###
+GET http://127.0.0.1:5002/api/posts HTTP/1.1
+
+###
+
+POST http://127.0.0.1:5002/api/posts HTTP/1.1
+content-type: application/json
+
+{
+    "body": "abcd"
+}
+
+### PATCH
+PATCH http://127.0.0.1:5002/api/posts/68fff25b4c0b55b6523d7857 HTTP/1.1
+content-type: application/json
+
+  {
+    "id": "68fff25b4c0b55b6523d7857",
+    "title": "",
+    "content": "Rust is a systems programming language focused on safety, speed, and concurrency. It empowers developers to write robust and memory-efficient code. Many are attracted to its fearless approach to memory management.",
+    "media": [
+      "https://picsum.photos/seed/789/200/300",
+      "https://picsum.photos/seed/101/200/300"
+    ],
+    "likes": 342,
+    "commentsCount": 19,
+    "userId": "c4e1f2a3-8b7d-4c6a-9d8e-3f2b1c4d5e6f",
+    "text": "Diving into the world of Rust programming!"
+  },
+
+### DELETE
+
+DELETE http://127.0.0.1:5002/api/posts/68fff25b4c0b55b6523d7857 HTTP/1.1

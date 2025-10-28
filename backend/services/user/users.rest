@@ -9,9 +9,9 @@ POST http://localhost:8080/users
 Content-Type: application/json
 
 {
-  "name": "Alice",
-  "email": "alice@example.com",
-  "password": "secret123"
+  "name": "Eve",
+  "email": "eve@example.com",
+  "password": "password5"
 }
 
 ###
@@ -27,15 +27,21 @@ PUT http://localhost:8080/users/1
 Content-Type: application/json
 
 {
-  "name": "Alice Updated",
-  "email": "alice.updated@example.com",
-  "password": "newpassword"
+  "name": "Eve Updated",
+  "email": "eve.updated@example.com",
+  "password": "newpassword5"
 }
 
 ###
 
 ### Delete a user by ID
 DELETE http://localhost:8080/users/1
+Content-Type: application/json
+
+###
+
+### Get a non-existent user (to test 404)
+GET http://localhost:8080/users/999
 Content-Type: application/json
 
 ###

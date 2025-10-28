@@ -6,8 +6,8 @@ import (
 	"math/rand"
 	"time"
 
-	"your_module_name/models"
-	"your_module_name/repository"
+	"connections/models"
+	"connections/repository"
 
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
 )
