@@ -1,29 +1,50 @@
-version: '3.8'
+version: "3.9"
+
 services:
-  db:
+  # ------------------------------
+  # Databases
+  # ------------------------------
+  user-db:
     image: postgres:15
-    restart: always
+    container_name: user-db
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: feeddb
+      POSTGRES_USER: ${USER_DB_USER}
+      POSTGRES_PASSWORD: ${USER_DB_PASSWORD}
+      POSTGRES_DB: ${USER_DB_NAME}
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - user-db-data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
 
-  backend:
-    build: .
-    depends_on:
-      - db
-    environment:
-      DATABASE_URL: "postgresql://postgres:password@db:5432/feeddb?schema=public"
-      PORT: 4000
-    ports:
-      - "4000:4000"
+  post-db:
+    image: mongo:7
+    container_name: post-db
     volumes:
-      - ./:/app
-    command: ["npm", "run", "start:dev"]
+      - post-db-data:/data/db
+    ports:
+      - "27017:27017"
 
+  connections-db:
+    image: neo4j:5.10
+    container_name: connections-db
+    environment:
+      # Default username/password combo: neo4j / test
+      - NEO4J_AUTH=neo4j/password
+      - NEO4J_ACCEPT_LICENSE_AGREEMENT=yes
+      # optional tuning
+      - NEO4J_dbms_memory_pagecache_size=1G
+      - NEO4J_dbms_memory_heap_initial__size=512m
+      - NEO4J_dbms_memory_heap_max__size=512m
+    ports:
+      - "7687:7687"
+      - "7474:7474"
+    volumes:
+      - connections-db-data:/data
+
+# ------------------------------
+# Persistent volumes
+# ------------------------------
 volumes:
-  pgdata:
+  user-db-data:
+  post-db-data:
+  connections-db-data:
