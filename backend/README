@@ -1,0 +1,108 @@
+Goal
+Build a small, working microservice demo in Go that can be run locally with Docker Compose and "just works" for basic development and evaluation.
+
+High-level requirements
+- Implement three backend microservices in Go (Golang): `usersvc`, `postsvc`, `connsvc` (connections).
+- Each service must:
+  - Be idiomatic Go (Go modules).
+  - Expose a gRPC API for internal inter-service communication.
+  - Expose a GraphQL subgraph (federation-compatible) for the GraphQL Gateway. The GraphQL layer may be thin: resolvers call the service’s business logic / gRPC handlers directly or reuse the same internal logic.
+  - Support basic CRUD for the main domain (users, posts, connections).
+  - Include health check endpoint (`/healthz`) and graceful shutdown.
+  - Provide a small set of unit tests for core behavior.
+  - Use structured logging and sensible timeouts/retries when calling other services.
+
+- Databases (for development only) — run as Docker images via docker-compose:
+  - `usersvc` → PostgreSQL (official image; include init-migration SQL or migrations using golang-migrate).
+  - `postsvc` → MongoDB (official image; include an initialization script or sample seed).
+  - `connsvc` → Neo4j (official image; include initial constraints/indexes and a small seed).
+  - Compose must mount volumes so data persists across container restarts (dev-friendly).
+
+- API Gateway (GraphQL):
+  - Implement a GraphQL Gateway that composes the federated subgraphs into one public API.
+  - It may be an Apollo Gateway (Node.js) or a Go-based gateway that supports Apollo Federation composition. If using Apollo Gateway, include the small Node service and package.json in the repo.
+  - The gateway exposes a single GraphQL endpoint for clients and can also proxy to subgraphs for introspection and health checks.
+
+- Inter-service comms:
+  - Use gRPC for internal RPC calls between services. Provide protobuf `.proto` files, generated Go code, and an example of a cross-service call (e.g., `postsvc` retrieving user display name from `usersvc` via gRPC).
+  - Optionally include a tiny adapter in each service so GraphQL resolvers can reuse gRPC clients (or share internal packages) to avoid duplicate business logic.
+
+- Docker Compose & local dev:
+  - Provide a `docker-compose.yml` that starts:
+    - postgres, mongo, neo4j (databases)
+    - usersvc, postsvc, connsvc (built from local Dockerfile)
+    - graphql-gateway (Node or Go)
+  - Provide `.env.example` with all env var names and sample values (DB URLs, ports, secrets).
+  - Provide simple `Makefile` or `dev` script with targets: `build`, `run`, `migrate`, `seed`, `test`, `docker-up`, `docker-down`.
+
+- Migrations & seeding:
+  - Use `golang-migrate` (or equivalent) for Postgres migrations and include SQL migrations.
+  - Include a Mongo seed script and Neo4j initialization Cypher script that runs at container startup (via docker-compose `volumes` + `command` or image init scripts).
+
+- Observability:
+  - Expose Prometheus metrics endpoint (`/metrics`) in each service.
+  - Provide simple, consistent structured logs (JSON) and a sample Grafana/Prometheus job config is optional (not required to run).
+
+- Security & production notes:
+  - For the demo, use simple auth stubs (no production auth). Document where JWT/OAuth would be performed and how to plug it in.
+  - Make clear the provided docker-compose is for local dev only (not production). Add README notes about production concerns: connection pooling, secrets management, database backups, scaling, and secure Neo4j configuration.
+
+Deliverables (concrete)
+1. A single repository with top-level directories:
+   - `/cmd/usersvc`, `/cmd/postsvc`, `/cmd/connsvc` — each containing main, Dockerfile, config.
+   - `/pkg` — shared proto, shared types, and utilities (logging, metrics).
+   - `/proto` — all `.proto` files and generated stubs.
+   - `/gateway` — GraphQL gateway (Apollo Gateway or Go-based) with package.json or go.mod.
+   - `/migrations` — Postgres migrations.
+   - `/docker-compose.yml`, `.env.example`, `Makefile`, `README.md`.
+
+2. Code expectations:
+   - `usersvc` uses `pgx` (or `database/sql`) with prepared statements or an ORM like sqlc/ent (if used, generate files).
+   - `postsvc` uses the official Mongo Go driver.
+   - `connsvc` uses the official Neo4j Go driver and models connections as graph relationships.
+   - Each service provides a `.proto` file for its gRPC API, with messages and CRUD RPCs.
+   - Each service provides a GraphQL subgraph schema including types and federation `@key` directives; include example queries/mutations.
+
+3. Examples and test data:
+   - Provide a `dev-data` script that seeds:
+     - 3 users in Postgres,
+     - 5 posts in Mongo linked to those users,
+     - a few connections in Neo4j (friend/follow edges).
+   - Provide example GraphQL queries and mutations in the README and a `queries.graphql` file.
+
+4. Run instructions (README):
+   - `cp .env.example .env`
+   - `make docker-up` (builds local service images and starts everything)
+   - `make migrate` (runs Postgres migrations)
+   - `make seed` (runs the seed scripts)
+   - `curl http://localhost:8080/healthz` (gateway health)
+   - Example GraphQL query and sample gRPC call: documented and runnable.
+
+Implementation constraints & choices (must follow)
+- Use Go 1.21+ (or latest stable) and modules.
+- Use protobuf v3 and gRPC; include generated Go code checked-in or show generation scripts (`make proto`).
+- For GraphQL subgraphs use `gqlgen` with the federation plugin (or an explicit instruction if using another library).
+- The GraphQL Gateway may be Apollo Gateway (Node) if federation tooling in Go is insufficient — provide both options and prefer Apollo Gateway for reliability in a demo if the implementer is allowed to add a minimal Node component.
+
+Acceptance criteria
+- `docker-compose up --build` followed by migration + seed results in a system where:
+  - GraphQL Gateway is reachable at `http://localhost:4000/graphql` (or a specified port).
+  - The gateway returns composed schema that includes `User`, `Post`, and `Connection` types.
+  - Example CRUD GraphQL queries/mutations work end-to-end (resolve to DB).
+  - gRPC calls between services work (demo in tests or example client).
+  - Health, metrics, and logs are available.
+
+Non-goals / constraints to avoid
+- Do not implement production-ready security, scaling, or full auth flows — only stubs and places to plug them.
+- The docker-compose setup is only for development/local testing — do not attempt to be a complete k8s/production deployment in this task.
+
+Optional nice-to-haves (not required but valuable)
+- Small GitHub Actions workflow to build, run unit tests, and run lint.
+- Dockerfile multi-stage builds and small instructions how to push images.
+- Example Postman/Insomnia collection or GraphQL Playground file.
+
+Example minimal artifacts to include inline (this is required in the deliverable):
+- A `usersvc` proto file snippet with `GetUser`, `CreateUser`, `UpdateUser`, `DeleteUser`, `ListUsers`.
+- A `User` GraphQL type with `@key` for federation and resolvers wired to gRPC or the same service business logic.
+
+Please produce the full repository skeleton, working Go code for each service, the GraphQL subgraphs, the gateway, docker-compose, migrations, seed scripts, and the README with exact commands that a developer can run to get the whole stack up and exercising the example queries in 1–2 terminal commands (plus migration/seed steps).

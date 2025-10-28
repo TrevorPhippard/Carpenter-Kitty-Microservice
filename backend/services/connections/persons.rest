@@ -1,0 +1,30 @@
+### Create a new person
+POST http://localhost:8080/persons
+Content-Type: application/json
+
+{
+  "id": "1",
+  "name": "Alice",
+  "age": 30
+}
+
+### Get person by ID
+GET http://localhost:8080/persons/1
+
+### Update person by ID
+PUT http://localhost:8080/persons/1
+Content-Type: application/json
+
+{
+  "name": "Alice Updated",
+  "age": 31
+}
+
+### Get person again to check update
+GET http://localhost:8080/persons/1
+
+### Delete person by ID
+DELETE http://localhost:8080/persons/1
+
+### Try to get deleted person (should return 404)
+GET http://localhost:8080/persons/1
